@@ -1,0 +1,43 @@
+# Go
+/bin/
+/dist/
+*.test
+*.out
+coverage*.html
+coverage*.txt
+# Node
+node_modules/
+.next/
+out/
+*.tsbuildinfo
+# Python
+__pycache__/
+*.pyc
+.venv/
+*.egg-info/
+# Local data / secrets
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+!test/fixtures/**/*.key
+/data/
+/deploy/compose/data/
+# Terraform
+.terraform/
+*.tfstate
+*.tfstate.*
+*.tfplan
+# IDE / OS
+.idea/
+.vscode/
+*.swp
+.DS_Store
+Thumbs.db
+# Build artifacts
+/docs/paper/*.pdf
+/web/playwright-report/
+/web/test-results/
+/test/load/results/*.raw.json
+/test/datasets/downloads/
