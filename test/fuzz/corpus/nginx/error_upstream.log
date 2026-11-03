@@ -1,0 +1,1 @@
+2024/06/01 09:15:32 [warn] 10#10: *5 upstream server temporarily disabled while connecting to upstream, client: 10.0.0.2, server: api, request: "GET /x HTTP/1.1", upstream: "http://10.0.0.3:8080/x", host: "api"
