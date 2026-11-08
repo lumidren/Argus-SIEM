@@ -1,0 +1,1 @@
+{"eventVersion":"1.08","userIdentity":{"type":"IAMUser","principalId":"AIDA1","arn":"arn:aws:iam::111122223333:user/carol","accountId":"111122223333","userName":"carol"},"eventTime":"2024-06-01T10:00:00Z","eventSource":"ec2.amazonaws.com","eventName":"DescribeInstances","awsRegion":"us-west-2","sourceIPAddress":"198.51.100.30","readOnly":true,"eventID":"c1"}
