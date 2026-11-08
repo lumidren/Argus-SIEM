@@ -1,0 +1,1 @@
+{"name":"pack_inventory_crontab","hostIdentifier":"web02","unixTime":1717233332,"columns":{"command":"/usr/local/bin/backup.sh","path":"/etc/crontab","minute":"0","hour":"2"},"action":"added"}
