@@ -1,0 +1,1 @@
+type=CWD msg=audit(1717233332.123:4567): cwd="/home/alice"

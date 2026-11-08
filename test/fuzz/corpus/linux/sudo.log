@@ -1,0 +1,1 @@
+<85>Jun  1 09:10:00 web01 sudo: alice : TTY=pts/0 ; PWD=/home/alice ; USER=root ; COMMAND=/usr/bin/systemctl status nginx
