@@ -24,8 +24,10 @@ func TestPodCreate(t *testing.T) {
 		"kubernetes.audit.pod.host_path": []string{"/var/log/app"}, "kubernetes.audit.response_status.code": int64(201),
 		"kubernetes.audit.annotations.authorization_k8s_io_decision": "allow",
 		"kubernetes.audit.annotations.authorization_k8s_io/reason":   "RBAC: allowed by RoleBinding",
-		"kubernetes.audit.request_object.spec.containers":            nil,
 	})
+	if !e.Has("kubernetes.audit.request_object.spec.containers") || !e.Has("kubernetes.audit.request_object_text") {
+		t.Fatal("request object not kept")
+	}
 }
 
 func TestClassification(t *testing.T) {
