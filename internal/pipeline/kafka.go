@@ -90,10 +90,6 @@ func (s *KafkaSource) Fetch(ctx context.Context) ([]Message, error) {
 	if fs.IsClientClosed() {
 		return nil, errors.New("pipeline: kafka client closed")
 	}
-	if err := ctx.Err(); err != nil {
-		s.client.AllowRebalance()
-		return nil, err
-	}
 	var errs []error
 	fs.EachError(func(topic string, p int32, err error) {
 		errs = append(errs, fmt.Errorf("%s[%d]: %w", topic, p, err))
@@ -109,8 +105,14 @@ func (s *KafkaSource) Fetch(ctx context.Context) ([]Message, error) {
 		}
 		out = append(out, m)
 	})
+	// Records already polled are returned even when ctx ended during the
+	// poll: the client has advanced past them, so dropping them here would
+	// lose them for the rest of this session.
 	if len(out) == 0 {
 		s.client.AllowRebalance()
+		if err := ctx.Err(); err != nil {
+			return nil, err
+		}
 		if len(errs) > 0 {
 			return nil, errors.Join(errs...)
 		}
