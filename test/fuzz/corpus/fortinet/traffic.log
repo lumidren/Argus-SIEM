@@ -1,0 +1,1 @@
+date=2024-06-01 time=10:00:00 devname="FGT-HQ" logid="0000000020" type="traffic" subtype="forward" srcip=10.0.0.7 dstip=192.0.2.30 dstport=53 proto=17 action="accept" service="DNS"
