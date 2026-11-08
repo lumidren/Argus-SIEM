@@ -1,0 +1,1 @@
+{"kind":"admin#reports#activity","id":{"time":"2024-06-01T10:00:00Z","uniqueQualifier":"c1","applicationName":"login","customerId":"C01"},"actor":{"email":"gina@example.com"},"ipAddress":"198.51.100.81","events":[{"type":"login","name":"logout"}]}
