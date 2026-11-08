@@ -193,8 +193,8 @@ var securityHandlers = map[int64]securityHandler{
 		setSubject(e, r)
 		setProcess(e, "process", r.get("ProcessName"), r.get("ProcessId"))
 	},
-	4673: privilegedService("privileged-service-called"),
-	4674: privilegedService("privileged-object-operation"),
+	4673:          privilegedService("privileged-service-called"),
+	4674:          privilegedService("privileged-object-operation"),
 	4720 + 100000: nil, // sentinel to keep gofmt alignment stable
 	4798: func(e *schema.Event, r *record) {
 		e.SetCategory(schema.CategoryIAM)
