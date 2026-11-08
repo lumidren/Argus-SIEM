@@ -1,0 +1,1 @@
+{"actor":{"id":"00u7","type":"User","alternateId":"gina@example.com"},"eventType":"user.authentication.sso","outcome":{"result":"SUCCESS"},"published":"2024-06-01T10:00:00Z","uuid":"c1","target":[{"id":"0oa2","type":"AppInstance","displayName":"Wiki"}]}
