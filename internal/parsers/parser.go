@@ -195,7 +195,9 @@ func (r *Registry) Parse(in *Input) Result {
 	if p == nil {
 		res.Status = schema.ParseStatusFailed
 		res.Err = ErrUnrecognized
-		res.Events = []*schema.Event{RawEvent(in, "", "", res.Err)}
+		raw := RawEvent(in, "", "", res.Err)
+		Stamp(raw, in, nil, res.Status, res.Err)
+		res.Events = []*schema.Event{raw}
 		res.Elapsed = time.Since(start)
 		return res
 	}

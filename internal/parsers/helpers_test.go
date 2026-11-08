@@ -82,6 +82,9 @@ func TestRegistryRoutingAndStamp(t *testing.T) {
 	if res.Status != schema.ParseStatusFailed || !errors.Is(res.Err, ErrUnrecognized) {
 		t.Fatalf("unrecognized handling: %+v", res)
 	}
+	if res.Events[0].String(schema.FieldParseStatus) != schema.ParseStatusFailed || res.Events[0].String(schema.FieldTenantID) != "t1" {
+		t.Fatalf("unrecognized raw event must be stamped: %v", res.Events[0].Keys())
+	}
 
 	// explicit kind wins over sniffing
 	res = r.Parse(&Input{Raw: []byte("zzz"), ReceivedAt: in.ReceivedAt, Source: Source{TenantID: "t", Kind: "alpha"}})
