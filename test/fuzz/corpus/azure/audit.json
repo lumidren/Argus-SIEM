@@ -1,0 +1,1 @@
+{"time":"2024-06-01T10:00:00Z","category":"AuditLogs","properties":{"activityDisplayName":"Update user","category":"UserManagement","result":"success","initiatedBy":{"user":{"userPrincipalName":"admin@example.com"}}}}
