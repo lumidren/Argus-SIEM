@@ -1,0 +1,1 @@
+{"insertId":"c1","logName":"projects/demo/logs/cloudaudit.googleapis.com%2Factivity","timestamp":"2024-06-01T10:00:00Z","protoPayload":{"@type":"type.googleapis.com/google.cloud.audit.AuditLog","serviceName":"compute.googleapis.com","methodName":"v1.compute.instances.list","authenticationInfo":{"principalEmail":"ops@example.com"}}}
