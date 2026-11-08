@@ -128,8 +128,14 @@ func (s *KafkaSource) Commit(ctx context.Context, msgs []Message) error {
 	return s.client.CommitRecords(ctx, recs...)
 }
 
-// Close leaves the group.
-func (s *KafkaSource) Close() { s.client.Close() }
+// Close leaves the group. A batch fetched but never committed (shutdown or
+// failure mid-batch) still holds the poll's rebalance block; it is released
+// first, otherwise leaving the group would wait forever. The uncommitted
+// batch is redelivered to the next group member.
+func (s *KafkaSource) Close() {
+	s.client.AllowRebalance()
+	s.client.Close()
+}
 
 // KafkaProducer is an idempotent producer that waits for all-ISR acks.
 type KafkaProducer struct{ client *kgo.Client }
