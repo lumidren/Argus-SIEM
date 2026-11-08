@@ -1,0 +1,1 @@
+{"timestamp":"2024-06-01T09:15:32.000000+0000","flow_id":2,"event_type":"tls","src_ip":"10.0.0.5","dest_ip":"192.0.2.10","proto":"TCP","tls":{"sni":"example.org","version":"TLS 1.3"}}
