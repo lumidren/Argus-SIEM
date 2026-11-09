@@ -14,6 +14,7 @@ import type {
   PlaybookRun,
   Source,
   Tenant,
+  TimelineEntry,
   User,
 } from "@/lib/types";
 import { buildPlaybooks, buildRules } from "./catalog";
@@ -444,7 +445,7 @@ export function generate(now: number) {
     ],
     tags: ["lateral-movement", "service-account"],
   };
-  inc.timeline = [
+  const tl: TimelineEntry[] = [
     ...sc.events.filter((_, i) => i === 0 || i === 17 || i >= 18).map((e) => ({ at: e["@timestamp"], kind: "event" as const, actor: String(e["host.name"] ?? ""), text: String(e.message ?? ""), ref: e.id })),
     ...scAlerts.map((a) => ({ at: a.createdAt, kind: "alert" as const, actor: "argus-detect", text: a.ruleName, ref: a.id })),
     { at: inc.createdAt, kind: "status", actor: "argus", text: "Incident created from correlated alerts" },
@@ -452,7 +453,8 @@ export function generate(now: number) {
     { at: new Date(now - 6 * MIN).toISOString(), kind: "playbook", actor: "argus-playbooks", text: "Playbook \"Enrich incident entities\" completed", ref: "run-1" },
     { at: new Date(now - 30 * MIN).toISOString(), kind: "evidence", actor: "carol", text: "Attached dc01-services.csv" },
     { at: new Date(now - 4 * MIN).toISOString(), kind: "status", actor: "carol", text: "Status changed to investigating" },
-  ].sort((a, b) => (a.at < b.at ? -1 : 1));
+  ];
+  inc.timeline = tl.sort((a, b) => (a.at < b.at ? -1 : 1));
   for (const a of scAlerts) a.incidentId = inc.id;
   incidents.push(inc);
 
