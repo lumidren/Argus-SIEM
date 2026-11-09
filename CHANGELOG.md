@@ -29,6 +29,10 @@ All notable changes to Argus are documented here. The format follows
   Fluent Bit configs.
 - Phase 2: chaos tests that kill the processor mid-stream (100,000 events on the in-memory log,
   20,000 over the Kafka protocol) and verify no loss.
+- Phase 8 (ahead of order): Next.js 15 analyst application with search, dashboards and a panel
+  builder, alert queue, incident workspace, entity pages, rules with a test runner, ATT&CK coverage
+  heat-map, playbook editor and runner, threat intel, source health and administration. Runs on a
+  seeded demo tenant until argus-api exists, and proxies to argus-api when `ARGUS_API_URL` is set.
 
 ### Fixed
 - Kafka source no longer hangs on close mid-batch and no longer drops records already polled when
