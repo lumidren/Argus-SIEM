@@ -1,0 +1,76 @@
+# Fluent Bit configuration that ships logs to Argus (YAML format, Fluent Bit 3.x).
+#
+# Records are wrapped in the Argus envelope by envelope.lua and produced to
+# argus.raw.<kind>. Filesystem storage buffers chunks through broker outages.
+# Required environment: ARGUS_TENANT, ARGUS_KAFKA_BROKERS, ARGUS_KAFKA_USERNAME,
+# ARGUS_KAFKA_PASSWORD.
+
+service:
+  flush: 1
+  log_level: info
+  storage.path: /var/lib/fluent-bit/storage
+  storage.sync: normal
+  storage.backlog.mem_limit: 64M
+  http_server: on
+  http_listen: 127.0.0.1
+  http_port: 2020
+
+pipeline:
+  inputs:
+    - name: tail
+      tag: linux
+      path: /var/log/auth.log,/var/log/secure,/var/log/audit/audit.log
+      db: /var/lib/fluent-bit/tail-linux.db
+      path_key: file
+      offset_key: offset
+      storage.type: filesystem
+      read_from_head: false
+    - name: tail
+      tag: nginx
+      path: /var/log/nginx/access.log
+      db: /var/lib/fluent-bit/tail-nginx.db
+      path_key: file
+      offset_key: offset
+      storage.type: filesystem
+    - name: tail
+      tag: suricata
+      path: /var/log/suricata/eve.json
+      db: /var/lib/fluent-bit/tail-suricata.db
+      path_key: file
+      offset_key: offset
+      storage.type: filesystem
+    - name: syslog
+      tag: generic
+      mode: tcp
+      listen: 0.0.0.0
+      port: 6514
+      tls: on
+      tls.crt_file: /etc/fluent-bit/tls/syslog.crt
+      tls.key_file: /etc/fluent-bit/tls/syslog.key
+      parser: syslog-rfc5424
+      storage.type: filesystem
+
+  filters:
+    - name: lua
+      match: "*"
+      script: /etc/fluent-bit/envelope.lua
+      call: envelope
+
+  outputs:
+    - name: kafka
+      match: "*"
+      brokers: ${ARGUS_KAFKA_BROKERS}
+      topics: argus.raw.generic
+      topic_key: topic
+      dynamic_topic: on
+      message_key_field: tenant_id
+      format: json
+      rdkafka.security.protocol: SASL_SSL
+      rdkafka.sasl.mechanism: SCRAM-SHA-512
+      rdkafka.sasl.username: ${ARGUS_KAFKA_USERNAME}
+      rdkafka.sasl.password: ${ARGUS_KAFKA_PASSWORD}
+      rdkafka.enable.idempotence: "true"
+      rdkafka.acks: all
+      rdkafka.compression.codec: zstd
+      storage.total_limit_size: 2G
+      retry_limit: no_limits

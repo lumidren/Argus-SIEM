@@ -1,0 +1,105 @@
+# Vector configuration that ships logs to Argus.
+#
+# Each record is wrapped in the Argus envelope (internal/pipeline/envelope.go):
+#   {"tenant_id","source_id","kind","collector","received_at","hints","provider_id","raw"}
+# and written to argus.raw.<kind>. Disk buffers give at-least-once delivery
+# through broker outages. UDP syslog is intentionally not enabled
+# (THREAT_MODEL T1.2); use TCP+TLS.
+#
+# Required environment: ARGUS_TENANT, ARGUS_KAFKA_BROKERS, ARGUS_KAFKA_USERNAME,
+# ARGUS_KAFKA_PASSWORD (inject from a secret store, never inline).
+
+data_dir: /var/lib/vector
+
+sources:
+  auth_log:
+    type: file
+    include: ["/var/log/auth.log", "/var/log/secure"]
+    read_from: end
+  audit_log:
+    type: file
+    include: ["/var/log/audit/audit.log"]
+    read_from: end
+  nginx_access:
+    type: file
+    include: ["/var/log/nginx/access.log"]
+    read_from: end
+  zeek:
+    type: file
+    include: ["/opt/zeek/logs/current/*.log"]
+    read_from: end
+  suricata_eve:
+    type: file
+    include: ["/var/log/suricata/eve.json"]
+    read_from: end
+  syslog_tls:
+    type: socket
+    mode: tcp
+    address: 0.0.0.0:6514
+    framing:
+      method: newline_delimited
+      newline_delimited:
+        max_length: 1048576
+    tls:
+      enabled: true
+      crt_file: /etc/vector/tls/syslog.crt
+      key_file: /etc/vector/tls/syslog.key
+
+transforms:
+  envelope:
+    type: remap
+    inputs: [auth_log, audit_log, nginx_access, zeek, suricata_eve, syslog_tls]
+    source: |
+      file = string(.file) ?? ""
+      kind = if contains(file, "auth.log") || contains(file, "secure") || contains(file, "audit") {
+        "linux"
+      } else if contains(file, "nginx") {
+        "nginx"
+      } else if contains(file, "/zeek/") {
+        "zeek"
+      } else if contains(file, "suricata") {
+        "suricata"
+      } else {
+        ""
+      }
+      hints = {}
+      if file != "" { hints.path = file }
+      offset = to_string(.offset) ?? ""
+      provider_id = if file != "" && offset != "" { "file:" + file + ":" + offset } else { "" }
+      . = {
+        "tenant_id": get_env_var!("ARGUS_TENANT"),
+        "source_id": if kind == "" { "syslog-tls" } else { "vector-" + kind },
+        "kind": kind,
+        "collector": {"Name": "vector", "Type": "vector", "Host": get_hostname!(), "Address": to_string(.host) ?? ""},
+        "received_at": format_timestamp!(now(), format: "%+"),
+        "hints": hints,
+        "provider_id": provider_id,
+        "raw": string!(.message)
+      }
+
+sinks:
+  argus_raw:
+    type: kafka
+    inputs: [envelope]
+    bootstrap_servers: "${ARGUS_KAFKA_BROKERS}"
+    topic: 'argus.raw.{{ kind }}'
+    key_field: tenant_id
+    compression: zstd
+    encoding:
+      codec: json
+    acknowledgements:
+      enabled: true
+    sasl:
+      enabled: true
+      mechanism: SCRAM-SHA-512
+      username: "${ARGUS_KAFKA_USERNAME}"
+      password: "${ARGUS_KAFKA_PASSWORD}"
+    tls:
+      enabled: true
+    librdkafka_options:
+      enable.idempotence: "true"
+      acks: all
+    buffer:
+      type: disk
+      max_size: 2147483648
+      when_full: block
