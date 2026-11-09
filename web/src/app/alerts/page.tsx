@@ -10,7 +10,7 @@ export default async function AlertsPage({ searchParams }: { searchParams: Promi
   const { focus } = await searchParams;
   return (
     <>
-      <PageHeader title="Alert queue" description="Deduplicated detections, scored by rule severity, asset criticality and entity risk. Correlated alerts are grouped into incidents." />
+      <PageHeader eyebrow="Investigate" title="Alert queue" description="Deduplicated detections, scored by rule severity, asset criticality and entity risk. Correlated alerts are grouped into incidents." />
       <AlertsClient alerts={listAlerts({ status: "all" })} now={data().now} {...(focus ? { focus } : {})} />
     </>
   );

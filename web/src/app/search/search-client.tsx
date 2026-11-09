@@ -46,7 +46,7 @@ export function SearchClient() {
   const [draft, setDraft] = useState(initialQ);
   const [range, setRange] = useState(initialRange);
   const [res, setRes] = useState<SearchResult | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [open, setOpen] = useState<string | null>(null);
   const [saved, setSaved] = useState<Saved[]>(DEFAULT_SAVED);
 
@@ -150,7 +150,7 @@ export function SearchClient() {
 
         <Card>
           <CardHeader
-            title={res?.error ? "Query error" : loading ? "Searching…" : `${(res?.total ?? 0).toLocaleString("en-US")} events`}
+            title={res?.error ? "Query error" : loading || !res ? "Searching…" : `${res.total.toLocaleString("en-US")} events`}
             description={res && !res.error ? `${res.tookMs} ms · sample of the demo tenant` : undefined}
           />
           <CardBody>
