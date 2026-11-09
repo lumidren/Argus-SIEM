@@ -2,6 +2,7 @@
 // lifetime of the server process. The same function signatures are served
 // by argus-api when ARGUS_API_URL is configured (see src/lib/api.ts).
 import "server-only";
+import type { ChainEdge, ChainNode } from "@/components/charts";
 import { evaluate, KQLError, parse } from "@/lib/kql";
 import type {
   Alert,
@@ -344,4 +345,40 @@ export function dashboards(): Dashboard[] {
       ],
     },
   ];
+}
+
+// ---- attack chain ----
+
+
+/** Builds the left-to-right attack chain for an incident: external sources,
+ * then accounts, then the hosts reached, in the order they were touched. */
+export function attackChain(inc: Incident): { columns: ChainNode[][]; edges: ChainEdge[] } {
+  const d = data();
+  const sc = d.scenario;
+  if (inc.id === "INC-1042") {
+    const hosts = sc.hosts;
+    const columns: ChainNode[][] = [
+      [{ id: "ip", kind: "ip", label: sc.attacker, sub: "SG · AS64512", severity: "critical" }],
+      [{ id: "user", kind: "user", label: sc.user, sub: "service account", severity: "critical" }],
+      ...hosts.map((h, i) => [{ id: `h${i}`, kind: "host" as const, label: h.split(".")[0]!, sub: h.startsWith("dc") ? "domain controller" : "server", severity: "high" as const }]),
+    ];
+    const edges: ChainEdge[] = [
+      { from: "ip", to: "user", label: "18 failures → logon" },
+      { from: "user", to: "h0", label: "logon + ADMIN$" },
+      { from: "h0", to: "h1", label: "logon + ADMIN$" },
+      { from: "h1", to: "h2", label: "service install" },
+    ];
+    return { columns, edges };
+  }
+  const ips = inc.entities.filter((e) => e.kind === "ip");
+  const users = inc.entities.filter((e) => e.kind === "user");
+  const hosts = inc.entities.filter((e) => e.kind === "host");
+  const columns = [ips, users, hosts]
+    .filter((c) => c.length)
+    .map((c) => c.slice(0, 4).map((e) => ({ id: `${e.kind}:${e.id}`, kind: e.kind, label: e.kind === "host" ? e.id.split(".")[0]! : e.id })));
+  const edges: ChainEdge[] = [];
+  for (let i = 0; i + 1 < columns.length; i++) {
+    for (const a of columns[i]!) for (const b of columns[i + 1]!) edges.push({ from: a.id, to: b.id, label: "" });
+  }
+  return { columns, edges };
 }
