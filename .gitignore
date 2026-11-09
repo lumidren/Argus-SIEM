@@ -41,3 +41,6 @@ Thumbs.db
 /web/test-results/
 /test/load/results/*.raw.json
 /test/datasets/downloads/
+
+# Local tooling
+/.claude/
