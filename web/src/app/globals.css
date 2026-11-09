@@ -1,0 +1,96 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Design tokens. Contrast pairs meet WCAG 2.2 AA (4.5:1 for text). */
+:root {
+  --background: oklch(0.985 0.002 250);
+  --foreground: oklch(0.21 0.02 255);
+  --muted: oklch(0.955 0.005 250);
+  --muted-foreground: oklch(0.45 0.02 255);
+  --card: oklch(1 0 0);
+  --border: oklch(0.9 0.008 250);
+  --primary: oklch(0.47 0.16 262);
+  --primary-foreground: oklch(0.99 0 0);
+  --accent: oklch(0.94 0.02 262);
+  --ring: oklch(0.55 0.18 262);
+  --sev-low: oklch(0.5 0.12 230);
+  --sev-medium: oklch(0.55 0.14 75);
+  --sev-high: oklch(0.55 0.19 40);
+  --sev-critical: oklch(0.52 0.22 25);
+  --good: oklch(0.5 0.13 150);
+  --bad: oklch(0.53 0.2 25);
+  --chart: oklch(0.55 0.17 262);
+  --chart-2: oklch(0.6 0.15 200);
+}
+
+.dark {
+  --background: oklch(0.16 0.015 255);
+  --foreground: oklch(0.94 0.008 250);
+  --muted: oklch(0.22 0.015 255);
+  --muted-foreground: oklch(0.72 0.015 255);
+  --card: oklch(0.195 0.015 255);
+  --border: oklch(0.3 0.015 255);
+  --primary: oklch(0.7 0.14 262);
+  --primary-foreground: oklch(0.16 0.02 262);
+  --accent: oklch(0.27 0.03 262);
+  --ring: oklch(0.72 0.15 262);
+  --sev-low: oklch(0.72 0.11 230);
+  --sev-medium: oklch(0.8 0.13 80);
+  --sev-high: oklch(0.74 0.16 45);
+  --sev-critical: oklch(0.7 0.19 25);
+  --good: oklch(0.74 0.13 150);
+  --bad: oklch(0.7 0.18 25);
+  --chart: oklch(0.72 0.14 262);
+  --chart-2: oklch(0.75 0.12 200);
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-card: var(--card);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-accent: var(--accent);
+  --color-ring: var(--ring);
+  --color-sev-low: var(--sev-low);
+  --color-sev-medium: var(--sev-medium);
+  --color-sev-high: var(--sev-high);
+  --color-sev-critical: var(--sev-critical);
+  --color-good: var(--good);
+  --color-bad: var(--bad);
+  --color-chart: var(--chart);
+  --color-chart-2: var(--chart-2);
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "Cascadia Code", "SF Mono", Menlo, Consolas, monospace;
+}
+
+html {
+  color-scheme: light;
+}
+html.dark {
+  color-scheme: dark;
+}
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+}
+* {
+  border-color: var(--border);
+}
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
