@@ -9,6 +9,7 @@ require (
 	github.com/twmb/franz-go v1.22.2
 	github.com/twmb/franz-go/pkg/kfake v0.0.0-20261108214834-f6ae20be6c4c
 	golang.org/x/sys v0.49.0
+	gopkg.in/yaml.v3 v3.0.1
 )
 
 require (
