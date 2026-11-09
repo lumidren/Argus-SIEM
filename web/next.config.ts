@@ -21,6 +21,7 @@ const csp = [
 
 const config: NextConfig = {
   reactStrictMode: true,
+  devIndicators: false,
   poweredByHeader: false,
   output: "standalone",
   // Pin the workspace root so tracing ignores lockfiles outside the repo.
