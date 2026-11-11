@@ -1,5 +1,5 @@
-import { Bars, Histogram } from "@/components/charts";
-import { Card, CardBody, CardHeader, Table, Td, Th } from "@/components/ui/primitives";
+import { AreaChart, Bars } from "@/components/charts";
+import { Card, CardBody, CardHeader, Stat, Table, Td, Th } from "@/components/ui/primitives";
 import type { DashboardPanel } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
@@ -9,15 +9,9 @@ export function DashboardView({ panels }: { panels: DashboardPanel[] }) {
   return (
     <div className="space-y-4">
       {stats.length ? (
-        <div className="grid grid-cols-2 gap-4 lg:grid-cols-4">
+        <div className={cn("grid grid-cols-2 gap-4", stats.length >= 4 ? "lg:grid-cols-4" : "lg:grid-cols-3")}>
           {stats.map((p) =>
-            p.kind === "stat" ? (
-              <Card key={p.title} className="p-4">
-                <p className="text-xs font-medium text-muted-foreground">{p.title}</p>
-                <p className={cn("mt-1 text-2xl font-semibold tabular-nums", p.tone === "bad" && "text-bad", p.tone === "good" && "text-good")}>{p.value}</p>
-                {p.delta ? <p className="mt-1 text-xs text-muted-foreground">{p.delta}</p> : null}
-              </Card>
-            ) : null,
+            p.kind === "stat" ? <Stat key={p.title} label={p.title} value={p.value} {...(p.delta ? { sub: p.delta } : {})} tone={p.tone ?? "neutral"} /> : null,
           )}
         </div>
       ) : null}
@@ -28,35 +22,38 @@ export function DashboardView({ panels }: { panels: DashboardPanel[] }) {
             <CardBody>
               {p.kind === "series" ? (
                 <>
-                  <Histogram label={p.title} points={p.points.map((x) => ({ at: x.at, count: x.value }))} />
+                  <AreaChart label={p.title} points={p.points} height={180} />
                   <div className="mt-1 flex justify-between text-[0.7rem] text-muted-foreground">
                     <span>{p.points[0]?.at.slice(11, 16)} UTC</span>
+                    <span>12h ago</span>
                     <span>now</span>
                   </div>
                 </>
               ) : p.kind === "bars" ? (
                 p.rows.length ? <Bars rows={p.rows} /> : <p className="text-sm text-muted-foreground">No data in range.</p>
               ) : p.kind === "table" ? (
-                <Table>
-                  <thead>
-                    <tr>
-                      {p.columns.map((c) => (
-                        <Th key={c}>{c}</Th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {p.rows.map((r, i) => (
-                      <tr key={i}>
-                        {r.map((c, j) => (
-                          <Td key={j} className="font-mono text-xs">
-                            {c}
-                          </Td>
+                <div className="-mx-5">
+                  <Table>
+                    <thead>
+                      <tr>
+                        {p.columns.map((c) => (
+                          <Th key={c}>{c}</Th>
                         ))}
                       </tr>
-                    ))}
-                  </tbody>
-                </Table>
+                    </thead>
+                    <tbody>
+                      {p.rows.map((r, i) => (
+                        <tr key={i}>
+                          {r.map((c, j) => (
+                            <Td key={j} className="font-mono text-xs">
+                              {c}
+                            </Td>
+                          ))}
+                        </tr>
+                      ))}
+                    </tbody>
+                  </Table>
+                </div>
               ) : null}
             </CardBody>
           </Card>
