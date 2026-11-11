@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Card, CardHeader, PageHeader, StatusBadge, Table, Td, Th } from "@/components/ui/primitives";
+import { Card, CardHeader, PageHeader, StatusBadge, Table, Td, Th, Stat } from "@/components/ui/primitives";
 import { data, parseErrors, sources } from "@/lib/demo/store";
 import { cn, compact, pct, relTime, utc } from "@/lib/utils";
 
@@ -12,18 +12,12 @@ export default function SourcesPage() {
   const totalEps = all.reduce((s, x) => s + x.eps, 0);
   return (
     <>
-      <PageHeader title="Data sources" description={`${all.length} registered sources at ${compact(totalEps)} events per second. A source goes silent when it stops sending for longer than its learned cadence.`} />
+      <PageHeader eyebrow="Platform" title="Data sources" description={`${all.length} registered sources at ${compact(totalEps)} events per second. A source goes silent when it stops sending for longer than its learned cadence.`} />
       <div className="mb-4 grid grid-cols-2 gap-4 lg:grid-cols-4">
-        {(["healthy", "degraded", "silent"] as const).map((s) => (
-          <Card key={s} className="p-4">
-            <p className="text-xs font-medium capitalize text-muted-foreground">{s}</p>
-            <p className={cn("mt-1 text-2xl font-semibold", s === "silent" && "text-bad", s === "degraded" && "text-sev-medium")}>{all.filter((x) => x.status === s).length}</p>
-          </Card>
-        ))}
-        <Card className="p-4">
-          <p className="text-xs font-medium text-muted-foreground">Events today</p>
-          <p className="mt-1 text-2xl font-semibold">{compact(all.reduce((s, x) => s + x.eventsToday, 0))}</p>
-        </Card>
+        <Stat label="Healthy" value={all.filter((x) => x.status === "healthy").length} tone="good" />
+        <Stat label="Degraded" value={all.filter((x) => x.status === "degraded").length} tone="warn" />
+        <Stat label="Silent" value={all.filter((x) => x.status === "silent").length} tone="bad" />
+        <Stat label="Events today" value={compact(all.reduce((s, x) => s + x.eventsToday, 0))} sub={`${compact(totalEps)} events per second`} />
       </div>
       <Card>
         <Table>
