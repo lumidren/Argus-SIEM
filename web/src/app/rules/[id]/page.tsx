@@ -33,8 +33,8 @@ export default async function RulePage({ params }: { params: Promise<{ id: strin
       <nav aria-label="Breadcrumb" className="mb-2 text-sm text-muted-foreground">
         <Link href="/rules" className="hover:underline">Rules</Link> / {r.id}
       </nav>
-      <PageHeader title={r.name} description={r.description} actions={<><SeverityBadge severity={r.severity} /><StatusBadge status={r.status} /></>} />
-      <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_24rem]">
+      <PageHeader eyebrow="Detection rule" title={r.name} description={r.description} actions={<><SeverityBadge severity={r.severity} /><StatusBadge status={r.status} /></>} />
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1fr)_24rem]">
         <div className="min-w-0 space-y-4">
           <Card>
             <CardHeader title="Definition" description={`rules/argus/${r.logsource.split(".")[0]}/${r.id}.yml · version ${r.version}`} />

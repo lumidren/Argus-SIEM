@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Badge, Card, PageHeader, SeverityBadge, StatusBadge, Table, Td, Th } from "@/components/ui/primitives";
+import { Badge, Card, PageHeader, SeverityBadge, StatusBadge, Table, Td, Th, Segmented, segmentClass } from "@/components/ui/primitives";
 import { rules } from "@/lib/demo/store";
 import { cn, pct } from "@/lib/utils";
 
@@ -16,23 +16,26 @@ export default async function RulesPage({ searchParams }: { searchParams: Promis
   const failing = all.filter((r) => r.tests.some((t) => !t.passed)).length;
   return (
     <>
-      <PageHeader
+      <PageHeader eyebrow="Detect & respond"
         title="Detection rules"
         description={`${all.length} rules versioned in Git. ${all.filter((r) => r.status === "production").length} in production, ${all.filter((r) => r.status === "staging").length} in staging (fire silently), ${failing} with failing tests.`}
         actions={<Link href="/coverage" className="text-sm text-primary hover:underline">ATT&CK coverage</Link>}
       />
-      <nav aria-label="Rule kind filter" className="mb-3 flex flex-wrap gap-1">
-        {KINDS.map((k) => (
-          <Link key={k} href={`/rules?kind=${k}&status=${status}`} aria-current={k === kind ? "page" : undefined} className={cn("rounded-md border px-2.5 py-1 text-sm capitalize", k === kind ? "bg-accent font-medium" : "text-muted-foreground hover:bg-accent")}>
-            {k}
-          </Link>
-        ))}
-        <span className="mx-2 border-l" aria-hidden />
-        {["all", "production", "staging", "experimental"].map((s) => (
-          <Link key={s} href={`/rules?kind=${kind}&status=${s}`} aria-current={s === status ? "page" : undefined} className={cn("rounded-md border px-2.5 py-1 text-sm capitalize", s === status ? "bg-accent font-medium" : "text-muted-foreground hover:bg-accent")}>
-            {s}
-          </Link>
-        ))}
+      <nav aria-label="Rule filters" className="mb-4 flex flex-wrap gap-3">
+        <Segmented aria-label="Rule kind">
+          {KINDS.map((k) => (
+            <Link key={k} href={`/rules?kind=${k}&status=${status}`} aria-current={k === kind ? "page" : undefined} className={segmentClass(k === kind)}>
+              {k}
+            </Link>
+          ))}
+        </Segmented>
+        <Segmented aria-label="Rule status">
+          {["all", "production", "staging", "experimental"].map((st) => (
+            <Link key={st} href={`/rules?kind=${kind}&status=${st}`} aria-current={st === status ? "page" : undefined} className={segmentClass(st === status)}>
+              {st}
+            </Link>
+          ))}
+        </Segmented>
       </nav>
       {technique ? (
         <p className="mb-3 text-sm">
