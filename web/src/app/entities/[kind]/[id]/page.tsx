@@ -42,7 +42,7 @@ export default async function EntityPage({ params }: { params: Promise<{ kind: s
         description={`${ref.kind === "ip" ? "IP address" : ref.kind === "user" ? "User account" : "Host"}${p ? ` · first seen ${relTime(p.firstSeen, now)}, last seen ${relTime(p.lastSeen, now)}` : ""}`}
         actions={<Link href={searchHref(`${field}:${id}`)} className="text-sm text-primary hover:underline">All events in search</Link>}
       />
-      <div className="grid gap-4 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         <Card>
           <CardHeader title="Risk" description="24-hour history" />
           <CardBody className="space-y-3">
