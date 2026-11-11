@@ -21,7 +21,7 @@ export default async function DashboardPage({ params }: { params: Promise<{ id: 
       <nav aria-label="Breadcrumb" className="mb-2 text-sm text-muted-foreground">
         <Link href="/dashboards" className="hover:underline">Dashboards</Link> / {d.title}
       </nav>
-      <PageHeader title={d.title} description={d.description} />
+      <PageHeader eyebrow="Dashboard" title={d.title} description={d.description} />
       <DashboardView panels={d.panels} />
     </>
   );
