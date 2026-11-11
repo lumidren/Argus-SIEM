@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { Card, PageHeader, SeverityBadge, StatusBadge, Table, Td, Th } from "@/components/ui/primitives";
+import { Card, PageHeader, Segmented, segmentClass, SeverityBadge, StatusBadge, Table, Td, Th } from "@/components/ui/primitives";
 import { data, listIncidents } from "@/lib/demo/store";
 import { INCIDENT_STATUSES } from "@/lib/types";
 import { cn, relTime, slaLeft } from "@/lib/utils";
@@ -17,13 +17,15 @@ export default async function IncidentsPage({ searchParams }: { searchParams: Pr
   const now = data().now;
   return (
     <>
-      <PageHeader title="Incidents" description="Alerts grouped by entity, technique and time window. Each incident carries an SLA timer from its severity." />
-      <nav aria-label="Incident status filter" className="mb-3 flex flex-wrap gap-1">
-        {FILTERS.map((f) => (
-          <Link key={f} href={`/incidents?status=${f}`} aria-current={f === filter ? "page" : undefined} className={cn("rounded-md border px-2.5 py-1 text-sm capitalize", f === filter ? "bg-accent font-medium" : "text-muted-foreground hover:bg-accent")}>
-            {f}
-          </Link>
-        ))}
+      <PageHeader eyebrow="Investigate" title="Incidents" description="Alerts grouped by entity, technique and time window. Each incident carries an SLA timer from its severity." />
+      <nav aria-label="Incident status filter" className="mb-4">
+        <Segmented>
+          {FILTERS.map((f) => (
+            <Link key={f} href={`/incidents?status=${f}`} aria-current={f === filter ? "page" : undefined} className={segmentClass(f === filter)}>
+              {f}
+            </Link>
+          ))}
+        </Segmented>
       </nav>
       <Card>
         <Table>
