@@ -12,8 +12,8 @@ export default function PlaybooksPage() {
   const all = playbooks();
   return (
     <>
-      <PageHeader title="Playbooks" description="YAML-defined, versioned response workflows. Every action supports dry run; destructive actions need approval from a second person and are fully audited." />
-      <div className="grid gap-4 md:grid-cols-2">
+      <PageHeader eyebrow="Detect & respond · SOAR" title="Playbooks" description="YAML-defined, versioned response workflows. Every action supports dry run; destructive actions need approval from a second person and are fully audited." />
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-2">
         {all.map((p) => (
           <Link key={p.id} href={`/playbooks/${p.id}`} className="block rounded-lg">
             <Card className="h-full p-4 hover:bg-accent/40">

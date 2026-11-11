@@ -8,7 +8,7 @@ export const metadata: Metadata = { title: "Search" };
 export default function SearchPage() {
   return (
     <>
-      <PageHeader title="Search" description="Query normalized events with KQL. Click a value to filter for it or exclude it, or open the user, host or IP it belongs to." />
+      <PageHeader eyebrow="Monitor" title="Search" description="Query normalized events with KQL. Click a value to filter for it or exclude it, or open the user, host or IP it belongs to." />
       <Suspense fallback={<p className="text-sm text-muted-foreground">Loading search…</p>}>
         <SearchClient />
       </Suspense>

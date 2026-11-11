@@ -23,8 +23,8 @@ export default function AdminPage() {
   const now = data().now;
   return (
     <>
-      <PageHeader title="Administration" description="Tenants, users and roles, single sign-on, and the tamper-evident audit log." />
-      <div className="grid gap-4 xl:grid-cols-2">
+      <PageHeader eyebrow="Platform" title="Administration" description="Tenants, users and roles, single sign-on, and the tamper-evident audit log." />
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
         <Card>
           <CardHeader title="Tenants" description="Each tenant has isolated indices, row-level security in Postgres and its own retention." />
           <Table>

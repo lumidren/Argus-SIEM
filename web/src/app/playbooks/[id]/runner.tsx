@@ -36,7 +36,7 @@ export function Runner({ pb, incidents }: { pb: Playbook; incidents: { id: strin
     }
   };
   return (
-    <div className="grid gap-4 xl:grid-cols-2">
+    <div className="grid grid-cols-1 gap-4 xl:grid-cols-2">
       <Card>
         <CardHeader title="Definition" description={`playbooks/${pb.id}.yml`} />
         <CardBody className="space-y-2">

@@ -21,7 +21,7 @@ export default async function PlaybookPage({ params }: { params: Promise<{ id: s
       <nav aria-label="Breadcrumb" className="mb-2 text-sm text-muted-foreground">
         <Link href="/playbooks" className="hover:underline">Playbooks</Link> / {pb.id}
       </nav>
-      <PageHeader title={pb.name} description={pb.description} />
+      <PageHeader eyebrow="Playbook" title={pb.name} description={pb.description} />
       <Runner pb={pb} incidents={listIncidents("open").map((i) => ({ id: i.id, title: i.title }))} />
     </>
   );

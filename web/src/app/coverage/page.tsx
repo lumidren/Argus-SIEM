@@ -21,7 +21,7 @@ export default function CoveragePage() {
   const covered = TECHNIQUES.filter((t) => (cov.get(t.id) ?? 0) > 0).length;
   return (
     <>
-      <PageHeader
+      <PageHeader eyebrow="Detect & respond"
         title="MITRE ATT&CK coverage"
         description={`${covered} of ${TECHNIQUES.length} tracked techniques have at least one active rule. Cells show the number of non-deprecated rules per technique.`}
       />

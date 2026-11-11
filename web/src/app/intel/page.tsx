@@ -15,7 +15,7 @@ export default async function IntelPage({ searchParams }: { searchParams: Promis
   const rows = indicators(q.trim() || undefined);
   return (
     <>
-      <PageHeader title="Threat intelligence" description="Indicators from MISP, TAXII 2.1, OTX and abuse.ch. Matched in-stream on every event, with retro-hunts over stored data when a new indicator arrives." />
+      <PageHeader eyebrow="Detect & respond" title="Threat intelligence" description="Indicators from MISP, TAXII 2.1, OTX and abuse.ch. Matched in-stream on every event, with retro-hunts over stored data when a new indicator arrives." />
       <Card>
         <CardHeader title="Feeds" />
         <Table>
